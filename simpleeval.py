@@ -116,8 +116,8 @@ DISALLOW_METHODS = ['format', 'format_map', 'mro']
 # very hard about it first.  And don't say I didn't warn you.
 # builtins is a dict in python >3.6 but a module before
 DISALLOW_FUNCTIONS = {
-        type, isinstance, eval, getattr, setattr, repr, compile, open
-        }
+    type, isinstance, eval, getattr, setattr, repr, compile, open
+}
 if hasattr(__builtins__, 'help') or \
         (hasattr(__builtins__, '__contains__') and 'help' in __builtins__):
     # PyInstaller environment doesn't include this module.
@@ -196,6 +196,7 @@ class IterableTooLong(InvalidExpression):
 class AssignmentAttempted(UserWarning):
     pass
 
+
 ########################################
 # Default simple functions to include:
 
@@ -239,24 +240,26 @@ def safe_add(a, b):  # pylint: disable=invalid-name
 ########################################
 # Defaults for the evaluator:
 
-DEFAULT_OPERATORS = {ast.Add: safe_add, ast.Sub: op.sub, ast.Mult: safe_mult,
-                     ast.Div: op.truediv, ast.FloorDiv: op.floordiv,
-                     ast.Pow: safe_power, ast.Mod: op.mod,
-                     ast.Eq: op.eq, ast.NotEq: op.ne,
-                     ast.Gt: op.gt, ast.Lt: op.lt,
-                     ast.GtE: op.ge, ast.LtE: op.le,
-                     ast.Not: op.not_,
-                     ast.USub: op.neg, ast.UAdd: op.pos,
-                     ast.In: lambda x, y: op.contains(y, x),
-                     ast.NotIn: lambda x, y: not op.contains(y, x),
-                     ast.Is: lambda x, y: x is y,
-                     ast.IsNot: lambda x, y: x is not y,
-                     }
+DEFAULT_OPERATORS = {
+    ast.Add: safe_add, ast.Sub: op.sub, ast.Mult: safe_mult,
+    ast.Div: op.truediv, ast.FloorDiv: op.floordiv,
+    ast.Pow: safe_power, ast.Mod: op.mod,
+    ast.Eq: op.eq, ast.NotEq: op.ne,
+    ast.Gt: op.gt, ast.Lt: op.lt,
+    ast.GtE: op.ge, ast.LtE: op.le,
+    ast.Not: op.not_,
+    ast.USub: op.neg, ast.UAdd: op.pos,
+    ast.In: lambda x, y: op.contains(y, x),
+    ast.NotIn: lambda x, y: not op.contains(y, x),
+    ast.Is: lambda x, y: x is y,
+    ast.IsNot: lambda x, y: x is not y,
+}
 
-DEFAULT_FUNCTIONS = {"rand": random, "randint": random_int,
-                     "int": int, "float": float,
-                     "str": str if PYTHON3 else globals().get("unicode", str)
-                     }
+DEFAULT_FUNCTIONS = {
+    "rand": random, "randint": random_int,
+    "int": int, "float": float,
+    "str": str if PYTHON3 else globals().get("unicode", str)
+}
 
 DEFAULT_NAMES = {"True": True, "False": False, "None": None}
 
