@@ -590,7 +590,7 @@ class SimpleEvalCondition(SimpleEval):
             self.nodes[ast.Constant] = self._eval_constant
 
     def eval(self, expr):
-        return super().eval(expr, mode="eval")
+        return super(self.__class__, self).eval(expr, mode="eval")
 
 
 class EvalWithCompoundTypes(SimpleEval):
