@@ -291,6 +291,7 @@ class SimpleEval(object):  # pylint: disable=too-few-public-methods
         self.names = names
 
         self.nodes = {
+            ast.Expression: self._eval_expression,
             ast.Expr: self._eval_expr,
             ast.Assign: self._eval_assign,
             ast.AugAssign: self._eval_aug_assign,
@@ -334,17 +335,19 @@ class SimpleEval(object):  # pylint: disable=too-few-public-methods
             if f in DISALLOW_FUNCTIONS:
                 raise FeatureNotAvailable('This function {} is a really bad idea.'.format(f))
 
-
-    def eval(self, expr):
+    def eval(self, expr, mode="exec"):
         """ evaluate an expresssion, using the operators, functions and
             names previously set up. """
-
-        # set a copy of the expression aside, so we can give nice errors...
-
-        self.expr = expr
-
-        # and evaluate:
-        return self._eval(ast.parse(expr.strip()).body[0])
+        if isinstance(expr, str):
+            self.expr = expr
+            if mode == "exec":
+                node = ast.parse(expr.strip(), mode=mode).body[0]
+            else:
+                node = ast.parse(expr, mode=mode)
+        else:
+            self.expr = ast.dump(expr)
+            node = expr 
+        return self._eval(node)
 
     def _eval(self, node):
         """ The internal evaluator used on each node in the parsed tree. """
@@ -356,6 +359,9 @@ class SimpleEval(object):  # pylint: disable=too-few-public-methods
                                       "evaluator".format(type(node).__name__))
 
         return handler(node)
+
+    def _eval_expression(self, node):
+        return self._eval(node.body)
 
     def _eval_expr(self, node):
         return self._eval(node.value)
