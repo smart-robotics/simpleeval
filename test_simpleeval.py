@@ -283,6 +283,7 @@ class TestOperators(DRYTest):
     # TODO
     pass
 
+
 class TestNewFeatures(DRYTest):
     """ Tests which will break when new features are added..."""
     def test_lambda(self):
@@ -490,7 +491,6 @@ class TestTryingToBreakOut(DRYTest):
             # and return things to normal
 
             simpleeval.DISALLOW_PREFIXES = dis
-
 
 
 class TestCompoundTypes(DRYTest):
@@ -886,6 +886,7 @@ class TestMethodChaining(unittest.TestCase):
         x = A()
         self.assertEqual(simple_eval("x.add(1).sub(2).sub(3).tostring()", names={"x": x}), "0-add1-sub2-sub3")
 
+
 class TestExtendingClass(unittest.TestCase):
     """
         It should be pretty easy to extend / inherit from the SimpleEval class,
@@ -934,7 +935,6 @@ class TestExceptions(unittest.TestCase):
             assert hasattr(e, 'expression')
             assert getattr(e, 'expression') == 'foo in bar'
 
-
     def test_attributedoesnotexist(self):
         try:
             raise AttributeDoesNotExist("foo", "foo in bar")
@@ -943,6 +943,7 @@ class TestExceptions(unittest.TestCase):
             assert getattr(e, 'attr') == 'foo'
             assert hasattr(e, 'expression')
             assert getattr(e, 'expression') == 'foo in bar'
+
 
 class TestUnusualComparisons(DRYTest):
     def test_custom_comparison_returner(self):
@@ -985,6 +986,7 @@ class TestUnusualComparisons(DRYTest):
 
         self.t('b > 2', BinaryExpression('GT'))
         self.t('1 < 5 > b', BinaryExpression('LT'))
+
 
 class TestGetItemUnhappy(DRYTest):
     # Again, SqlAlchemy doing unusual things.  Throwing it's own errors, rather than
