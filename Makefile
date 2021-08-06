@@ -6,8 +6,10 @@ autotest:
 clean:
 	rm -rf build && true
 	rm -rf dist && true 
-	rm -rf venv && true
 	rm -f file.txt && true
+
+clean-venv:
+	rm -rf venv && true
 
 test:
 	python test_simpleeval.py
@@ -22,11 +24,9 @@ venv/:
 	ls ./venv/bin/activate
 	source venv/bin/activate && pip install --upgrade pip setuptools wheel && pip install -r requirements-dev.txt
 
-dist/: setup.py simpleeval.py README.rst
-	python setup.py build sdist
-	twine check dist/*
+dist/: venv setup.py simpleeval.py README.rst
+	source venv/bin/activate && python setup.py build sdist && twine check dist/*
 
-pypi: test dist/
-	twine check dist/*
-	twine upload dist/*
+pypi: venv test dist/
+	source venv/bin/activate && twine check dist/* && twine upload dist/*
 
