@@ -1,20 +1,13 @@
 import subprocess
 from setuptools import setup
 
-__version__ = '0.10.0'
-
-
-def load_version():
-    tag = subprocess.check_output(["git", "describe", "--tags"]).decode()
-    if tag != __version__:
-        raise ValueError("Please update version to {}".format(tag))
-    return str(tag)
+__version__ = subprocess.check_output(["git", "describe", "--tags"]).decode().rstrip()
 
 
 setup(
     name='simpleeval',
     py_modules=['simpleeval'],
-    version=load_version(),
+    version=__version__,
     description='A simple, safe single expression evaluator library.',
     long_description=open('README.rst', 'r').read(),
     long_description_content_type='text/x-rst',
