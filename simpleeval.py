@@ -255,7 +255,8 @@ DEFAULT_OPERATORS = {ast.Add: safe_add, ast.Sub: op.sub, ast.Mult: safe_mult,
 
 DEFAULT_FUNCTIONS = {"rand": random, "randint": random_int,
                      "int": int, "float": float,
-                     "str": str if PYTHON3 else unicode}
+                     "str": str if PYTHON3 else globals().get("unicode", str)
+                     }
 
 DEFAULT_NAMES = {"True": True, "False": False, "None": None}
 
