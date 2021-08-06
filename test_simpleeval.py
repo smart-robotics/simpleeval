@@ -103,19 +103,6 @@ class TestBasicConditionals(DRYTest):
         self.t("False == False", True)
         self.t("False < True", True)
 
-    def test_is(self):
-        self.t('1 is 1', True)
-        self.t('1 is 2', False)
-        self.t('1 is "a"', False)
-        self.t('1 is None', False)
-        self.t('None is None', True)
-
-        self.t('1 is not 1', False)
-        self.t('1 is not 2', True)
-        self.t('1 is not "a"', True)
-        self.t('1 is not None', True)
-        self.t('None is not None', False)
-
     def test_set_not_allowed(self):
         with self.assertRaises(FeatureNotAvailable):
             self.t('{22}', False)
@@ -165,6 +152,19 @@ class TestBasic(DRYTest):
 
         # and more complex expressions:
         self.t("'a' if 4 < 1 else 'b' if 1 == 2 else 'c'", 'c')
+
+    def test_is(self):
+        self.t('1 is 1', True)
+        self.t('1 is 2', False)
+        self.t('1 is "a"', False)
+        self.t('1 is None', False)
+        self.t('None is None', True)
+
+        self.t('1 is not 1', False)
+        self.t('1 is not 2', True)
+        self.t('1 is not "a"', True)
+        self.t('1 is not None', True)
+        self.t('None is not None', False)
 
     def test_fstring(self):
         if sys.version_info >= (3, 6, 0):
