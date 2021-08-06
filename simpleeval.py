@@ -553,7 +553,7 @@ class SimpleEval(object):  # pylint: disable=too-few-public-methods
 class SimpleEvalCondition(SimpleEval):
 
     def __init__(self, names=None):
-        super().__init__(
+        super(self.__class__, self).__init__(
             functions={},  # no functions allowed
             names=names,
         )
