@@ -1,8 +1,18 @@
-*.pyc
+# project
+testfile.txt
+untracked_*
+
+# dist
+MANIFEST
 build
 dist
-MANIFEST
-.idea
-venv
+*.egg-info
 
-testfile.txt
+# python
+venv
+*.pyc
+__pycache__
+
+# editors
+.vscode
+.idea
