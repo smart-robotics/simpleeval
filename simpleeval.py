@@ -278,11 +278,11 @@ class SimpleEval(object):  # pylint: disable=too-few-public-methods
             Create the evaluator instance.  Set up valid operators (+,-, etc)
             functions (add, random, get_val, whatever) and names. """
 
-        if not operators:
+        if operators is None:
             operators = DEFAULT_OPERATORS.copy()
-        if not functions:
+        if functions is None:
             functions = DEFAULT_FUNCTIONS.copy()
-        if not names:
+        if names is None:
             names = DEFAULT_NAMES.copy()
 
         self.operators = operators
@@ -343,7 +343,7 @@ class SimpleEval(object):  # pylint: disable=too-few-public-methods
             if mode == "exec":
                 node = ast.parse(expr.strip(), mode=mode).body[0]
             else:
-                node = ast.parse(expr, mode=mode)
+                node = ast.parse(expr.strip(), mode=mode)
         else:
             self.expr = ast.dump(expr)
             node = expr 
@@ -544,6 +544,49 @@ class SimpleEval(object):  # pylint: disable=too-few-public-methods
             fmt = "{:" + self._eval(node.format_spec) + "}"
             return fmt.format(self._eval(node.value))
         return self._eval(node.value)
+
+
+class SimpleEvalCondition(SimpleEval):
+
+    def __init__(self, names=None):
+        super().__init__(
+            functions={},  # no functions allowed
+            names=names,
+        )
+
+        # only certain nodes allowed
+        self.nodes = {
+            ast.Expression: self._eval_expression,
+            # ast.Expr: self._eval_expr,
+            # ast.Assign: self._eval_assign,
+            # ast.AugAssign: self._eval_aug_assign,
+            # ast.Import: self._eval_import,
+            ast.Num: self._eval_num,
+            # ast.Str: self._eval_str,
+            ast.Name: self._eval_name,
+            ast.UnaryOp: self._eval_unaryop,
+            ast.BinOp: self._eval_binop,
+            ast.BoolOp: self._eval_boolop,
+            ast.Compare: self._eval_compare,
+            # ast.IfExp: self._eval_ifexp,
+            # ast.Call: self._eval_call,
+            # ast.keyword: self._eval_keyword,
+            # ast.Subscript: self._eval_subscript,
+            # ast.Attribute: self._eval_attribute,
+            # ast.Index: self._eval_index,
+            # ast.Slice: self._eval_slice,
+        }
+
+        # py3k stuff:
+        if hasattr(ast, 'NameConstant'):
+            self.nodes[ast.NameConstant] = self._eval_constant
+
+        # py3.8 uses ast.Constant instead of ast.Num, ast.Str, ast.NameConstant
+        if hasattr(ast, 'Constant'):
+            self.nodes[ast.Constant] = self._eval_constant
+
+    def eval(self, expr):
+        return super().eval(expr, mode="eval")
 
 
 class EvalWithCompoundTypes(SimpleEval):

@@ -14,7 +14,7 @@ import simpleeval
 import os
 import warnings
 from simpleeval import (
-    SimpleEval, EvalWithCompoundTypes, FeatureNotAvailable, FunctionNotDefined, NameNotDefined,
+    SimpleEval, SimpleEvalCondition, EvalWithCompoundTypes, FeatureNotAvailable, FunctionNotDefined, NameNotDefined,
     InvalidExpression, AttributeDoesNotExist, simple_eval
 )
 
@@ -32,7 +32,7 @@ class DRYTest(unittest.TestCase):
         return self.assertEqual(self.s.eval(expr), shouldbe)
 
 
-class TestBasic(DRYTest):
+class TestBasicConditionals(DRYTest):
     """ Simple expressions. """
 
     def test_maths_with_ints(self):
@@ -103,15 +103,25 @@ class TestBasic(DRYTest):
         self.t("False == False", True)
         self.t("False < True", True)
 
-    def test_if_else(self):
-        """ x if y else z """
+    def test_is(self):
+        self.t('1 is 1', True)
+        self.t('1 is 2', False)
+        self.t('1 is "a"', False)
+        self.t('1 is None', False)
+        self.t('None is None', True)
 
-        # and test if/else expressions:
-        self.t("'a' if 1 == 1 else 'b'", 'a')
-        self.t("'a' if 1 > 2 else 'b'", 'b')
+        self.t('1 is not 1', False)
+        self.t('1 is not 2', True)
+        self.t('1 is not "a"', True)
+        self.t('1 is not None', True)
+        self.t('None is not None', False)
 
-        # and more complex expressions:
-        self.t("'a' if 4 < 1 else 'b' if 1 == 2 else 'c'", 'c')
+    def test_set_not_allowed(self):
+        with self.assertRaises(FeatureNotAvailable):
+            self.t('{22}', False)
+
+
+class TestBasic(DRYTest):
 
     def test_default_conversions(self):
         """ conversion between types """
@@ -146,18 +156,15 @@ class TestBasic(DRYTest):
         self.t('"I" not in "team"', True)
         self.t('"U" in "RUBBISH"', True)
 
-    def test_is(self):
-        self.t('1 is 1', True)
-        self.t('1 is 2', False)
-        self.t('1 is "a"', False)
-        self.t('1 is None', False)
-        self.t('None is None', True)
+    def test_if_else(self):
+        """ x if y else z """
 
-        self.t('1 is not 1', False)
-        self.t('1 is not 2', True)
-        self.t('1 is not "a"', True)
-        self.t('1 is not None', True)
-        self.t('None is not None', False)
+        # and test if/else expressions:
+        self.t("'a' if 1 == 1 else 'b'", 'a')
+        self.t("'a' if 1 > 2 else 'b'", 'b')
+
+        # and more complex expressions:
+        self.t("'a' if 4 < 1 else 'b' if 1 == 2 else 'c'", 'c')
 
     def test_fstring(self):
         if sys.version_info >= (3, 6, 0):
@@ -166,10 +173,6 @@ class TestBasic(DRYTest):
             self.t('f"one is {1} and two is {2}"', "one is 1 and two is 2")
             self.t('f"1+1 is {1+1}"', "1+1 is 2")
             self.t('f"{\'dramatic\':!<11}"', "dramatic!!!")
-
-    def test_set_not_allowed(self):
-        with self.assertRaises(FeatureNotAvailable):
-            self.t('{22}', False)
 
 
 class TestFunctions(DRYTest):
@@ -1080,6 +1083,27 @@ class TestDisallowedFunctions(DRYTest):
                 s.eval('foo(42)')
 
         simpleeval.DEFAULT_FUNCTIONS = DF.copy()
+
+
+class TestSimpleEvalCondition(TestWhitespace, TestBasicConditionals, TestUnusualComparisons):
+
+    def setUp(self):
+        """Set up condition"""
+        self.s = SimpleEvalCondition()
+
+    def test_function_not_allowed(self):
+        with self.assertRaises(FeatureNotAvailable):
+            self.t('float("42")', False)
+
+    def test_assign_not_allowed(self):
+        with self.assertRaises(SyntaxError):
+            # mode="eval" won't parse
+            self.t('a = 2', False)
+
+    def test_tuple_not_allowed(self):
+        with self.assertRaises(FeatureNotAvailable):
+            # mode="eval" won't parse
+            self.t('(1, 2, 3)', False)
 
 
 if __name__ == '__main__':  # pragma: no cover
