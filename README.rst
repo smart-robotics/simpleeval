@@ -77,7 +77,6 @@ Note:
 all further examples use ``>>>`` to designate python code, as if you are using
 the python interactive prompt.
 
-.. _Operators:
 
 Operators
 ---------
