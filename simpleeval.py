@@ -272,7 +272,6 @@ class SimpleEval(object):  # pylint: disable=too-few-public-methods
         >>> s.eval("20 + 30 - ( 10 * 5)")
         0
         """
-    expr = ""
 
     def __init__(self, operators=None, functions=None, names=None):
         """
@@ -289,6 +288,7 @@ class SimpleEval(object):  # pylint: disable=too-few-public-methods
         self.operators = operators
         self.functions = functions
         self.names = names
+        self.expr = ""
 
         self.nodes = {
             ast.Expression: self._eval_expression,
