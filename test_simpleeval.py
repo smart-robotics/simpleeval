@@ -47,7 +47,6 @@ class TestBasicConditionals(DRYTest):
         self.t("100 % 9", 1)
 
     def test_bools_and_or(self):
-        self.t('True and ""', "")
         self.t('True and False', False)
         self.t('True or False', True)
         self.t('False or False', False)
@@ -152,6 +151,9 @@ class TestBasic(DRYTest):
 
         # and more complex expressions:
         self.t("'a' if 4 < 1 else 'b' if 1 == 2 else 'c'", 'c')
+
+    def test_bools_and_or_with_strings(self):
+        self.t('True and ""', "")
 
     def test_is(self):
         self.t('1 is 1', True)
