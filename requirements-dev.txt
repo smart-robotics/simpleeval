@@ -1,0 +1,11 @@
+# Testing
+nose
+coveralls
+coverage
+
+# packaging
+twine
+
+# linting
+# pylint
+# flake8
