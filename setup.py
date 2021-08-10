@@ -1,20 +1,32 @@
 import subprocess
 from setuptools import setup
 
-__version__ = subprocess.check_output(["git", "describe", "--tags"]).decode().rstrip()
 
+def get_version():
+    """Load version"""
+    version_file = "VERSION"
+    try:
+        version = subprocess.check_output(["git", "describe", "--tags"]).decode().rstrip()
+        with open(version_file, "w") as buffer:
+            buffer.writelines([version])
+        return version
+    except subprocess.CalledProcessError:
+        with open(version_file) as buffer:
+            return buffer.readline().strip()
+
+version = get_version()
 
 setup(
     name='simpleeval',
     py_modules=['simpleeval'],
-    version=__version__,
+    version=version,
     description='A simple, safe single expression evaluator library.',
     long_description=open('README.rst', 'r').read(),
     long_description_content_type='text/x-rst',
     author='Daniel Fairhead',
     author_email='danthedeckie@gmail.com',
     url='https://github.com/danthedeckie/simpleeval',
-    download_url='https://github.com/danthedeckie/simpleeval/tarball/' + __version__,
+    download_url='https://github.com/danthedeckie/simpleeval/tarball/' + version,
     keywords=['eval', 'simple', 'expression', 'parse', 'ast'],
     test_suite='test_simpleeval',
     use_2to3=True,
