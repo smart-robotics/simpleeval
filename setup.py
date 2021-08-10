@@ -4,14 +4,7 @@ from setuptools import setup
 
 def get_version():
     """Load version"""
-    version_file = "VERSION"
-    try:
-        version = subprocess.check_output(["git", "describe", "--tags"]).decode().rstrip()
-        with open(version_file, "w") as buffer:
-            buffer.writelines([version])
-        return version
-    except subprocess.CalledProcessError:
-        with open(version_file) as buffer:
+    with open("VERSION") as buffer:
             return buffer.readline().strip()
 
 version = get_version()
