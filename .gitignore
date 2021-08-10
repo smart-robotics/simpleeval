@@ -1,6 +1,7 @@
 # project
 testfile.txt
 untracked_*
+VERSION
 
 # dist
 MANIFEST
