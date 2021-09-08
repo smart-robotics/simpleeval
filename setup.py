@@ -1,28 +1,20 @@
-import subprocess
 from setuptools import setup
 
-
-def get_version():
-    """Load version"""
-    with open("VERSION") as buffer:
-            return buffer.readline().strip()
-
-version = get_version()
+__version__ = '0.11.0'
 
 setup(
     name='simpleeval',
     py_modules=['simpleeval'],
-    version=version,
+    version=__version__,
     description='A simple, safe single expression evaluator library.',
     long_description=open('README.rst', 'r').read(),
     long_description_content_type='text/x-rst',
     author='Daniel Fairhead',
     author_email='danthedeckie@gmail.com',
     url='https://github.com/danthedeckie/simpleeval',
-    download_url='https://github.com/danthedeckie/simpleeval/tarball/' + version,
+    download_url='https://github.com/danthedeckie/simpleeval/tarball/' + __version__,
     keywords=['eval', 'simple', 'expression', 'parse', 'ast'],
     test_suite='test_simpleeval',
-    use_2to3=True,
     classifiers=['Development Status :: 4 - Beta',
                  'Intended Audience :: Developers',
                  'License :: OSI Approved :: MIT License',
